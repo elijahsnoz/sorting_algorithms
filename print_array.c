@@ -9,9 +9,8 @@
  */
 void print_array(const int *array, size_t size)
 {
-    size_t i;
+    size_t i = 0;
 
-    i = 0;
     while (array && i < size)
     {
         if (i > 0)
