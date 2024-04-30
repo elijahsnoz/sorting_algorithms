@@ -1,40 +1,41 @@
 #include "sort.h"
 
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers
+ *                       in ascending order using Insertion sort algorithm.
+ * @list: A pointer to the head of the doubly linked list.
+ *
+ * Description: Prints the list after each time two nodes are swapped.
+ */
 void insertion_sort_list(listint_t **list)
 {
+    listint_t *current, *insertion_point;
+
     if (list == NULL || *list == NULL || (*list)->next == NULL)
         return;
 
-    listint_t *sorted = NULL; // Sorted list
-    listint_t *current = *list;
+    current = (*list)->next;
 
     while (current != NULL)
     {
-        listint_t *next = current->next; // Store the next node before modifying current
-
-        if (sorted == NULL || sorted->n >= current->n)
+        insertion_point = current->prev;
+        while (insertion_point != NULL && insertion_point->n > current->n)
         {
-            current->next = sorted;
-            current->prev = NULL;
-            if (sorted != NULL)
-                sorted->prev = current;
-            sorted = current;
-        }
-        else
-        {
-            listint_t *search = sorted;
-            while (search->next != NULL && search->next->n < current->n)
-                search = search->next;
+            if (insertion_point->prev != NULL)
+                insertion_point->prev->next = current;
+            current->prev = insertion_point->prev;
+            insertion_point->prev = current;
+            insertion_point->next = current->next;
+            if (current->next != NULL)
+                current->next->prev = insertion_point;
+            current->next = insertion_point;
+            if (*list == insertion_point)
+                *list = current;
 
-            current->next = search->next;
-            if (search->next != NULL)
-                search->next->prev = current;
-            search->next = current;
-            current->prev = search;
+            print_list(*list);
+            insertion_point = current->prev;
         }
-
-        current = next; // Move to the next node
+        current = current->next;
     }
-
-    *list = sorted; // Update the head of the list
 }
+
